@@ -1,0 +1,11 @@
+#semaforo {
+  font-size: 80px;
+}
+
+.nascondi {
+  visibility: hidden;
+}
+
+.img {
+  width: 30%;
+}

@@ -1,0 +1,174 @@
+/* Mini-libreria — Settimana VII Giorno I
+   Stile minimal: il focus è sulla logica JS, non sul layout. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background: #f7f7f7;
+  color: #1a1a1a;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.site-header {
+  background: hsl(220, 50%, 25%);
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.site-header h1 {
+  margin: 0 0 8px;
+}
+.site-header p {
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* Aggiungi qui le tue regole per form, lista libri, bottoni, ecc. */
+.form-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h2 {
+  margin: 0 0 20px;
+  font-size: 1.5em;
+}
+
+.lista-section {
+  margin-top: 28px;
+}
+
+.lista-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.lista-header h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.btn-svuota {
+  color: red;
+  background: none;
+  border-color: red;
+  border-radius: 5px;
+  width: 120px;
+  height: 40px;
+}
+.btn-export {
+  margin-left: 250px;
+  color: white;
+  background: green;
+  border-color: green;
+  border-radius: 5px;
+  width: 120px;
+  height: 40px;
+}
+
+.btn-daLeggere {
+  color: red;
+  background: none;
+  border-color: red;
+  border-radius: 5px;
+  width: 120px;
+  height: 40px;
+}
+
+.btn-letti {
+  color: green;
+  background: none;
+  border-color: green;
+  border-radius: 5px;
+  width: 120px;
+  height: 40px;
+}
+
+.btn-all {
+  color: black;
+  background: none;
+  border-color: black;
+  border-radius: 5px;
+  width: 120px;
+  height: 40px;
+}
+
+.info-storage {
+  font-style: italic;
+  color: grey;
+}
+.lista-libri {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lista-libri li {
+  background: white;
+  padding: 16px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border-left: 4px solid hsl(220, 50%, 25%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lista-libri li.letto {
+  border-left-color: hsl(140, 50%, 25%);
+  opacity: 0.65;
+}
+
+.lista-libri .info {
+  flex: 1;
+}
+
+.lista-libri .titolo {
+  font-weight: bold;
+}
+
+.lista-libri .meta {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.lista-libri .badge-formato {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  background: #eee;
+  color: #555;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.lista-libri .azioni button {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.lista-libri .azioni button:hover {
+  background: hsl(140, 50%, 95%);
+  border-color: hsl(140, 50%, 35%);
+}
