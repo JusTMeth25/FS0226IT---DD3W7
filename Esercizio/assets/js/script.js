@@ -112,19 +112,19 @@ function renderLibri() {
 }
 
 // === Mostra / nasconde campo dimensione ===
-document.getElementById("formato").addEventListener("change", (e) => {
-  if (e.target.value === "digitale") {
-    document.getElementById("campo-dimensione").removeAttribute("hidden");
-  } else {
-    document.getElementById("campo-dimensione").setAttribute("hidden", "");
-  }
+// document.getElementById("formato").addEventListener("change", (e) => {
+//   if (e.target.value === "digitale") {
+//     document.getElementById("campo-dimensione").removeAttribute("hidden");
+//   } else {
+//     document.getElementById("campo-dimensione").setAttribute("hidden", "");
+//   }
 
-  if (e.target.value === "audio") {
-    document.getElementById("campo-durata").removeAttribute("hidden");
-  } else {
-    document.getElementById("campo-durata").setAttribute("hidden", "");
-  }
-});
+//   if (e.target.value === "audio") {
+//     document.getElementById("campo-durata").removeAttribute("hidden");
+//   } else {
+//     document.getElementById("campo-durata").setAttribute("hidden", "");
+//   }
+// });
 
 // === Filtro ===
 document.getElementById("filter-all").addEventListener("click", () => {
@@ -153,33 +153,33 @@ document.getElementById("ordina").addEventListener("change", (e) => {
 });
 
 // === Submit form ===
-document.getElementById("aggiungi-libro").addEventListener("submit", (e) => {
-  e.preventDefault();
+// document.getElementById("aggiungi-libro").addEventListener("submit", (e) => {
+//   e.preventDefault();
 
-  const titolo = e.target.titolo.value;
-  const autore = e.target.autore.value;
-  const anno = parseInt(e.target.anno.value);
-  const formato = e.target.formato.value;
-  const dimensioneMb = parseFloat(e.target.dimensione.value) || 0;
-  const durataMinuti = parseInt(e.target.durata.value) || 0;
+//   const titolo = e.target.titolo.value;
+//   const autore = e.target.autore.value;
+//   const anno = parseInt(e.target.anno.value);
+//   const formato = e.target.formato.value;
+//   const dimensioneMb = parseFloat(e.target.dimensione.value) || 0;
+//   const durataMinuti = parseInt(e.target.durata.value) || 0;
 
-  let nuovoLibro;
+//   let nuovoLibro;
 
-  if (formato === "digitale") {
-    nuovoLibro = new LibroDigitale(titolo, autore, anno, dimensioneMb);
-  } else if (formato === "audio") {
-    nuovoLibro = new LibroAudio(titolo, autore, anno, durataMinuti);
-  } else {
-    nuovoLibro = new Libro(titolo, autore, anno);
-  }
+//   if (formato === "digitale") {
+//     nuovoLibro = new LibroDigitale(titolo, autore, anno, dimensioneMb);
+//   } else if (formato === "audio") {
+//     nuovoLibro = new LibroAudio(titolo, autore, anno, durataMinuti);
+//   } else {
+//     nuovoLibro = new Libro(titolo, autore, anno);
+//   }
 
-  libri.push(nuovoLibro);
-  salvaLibri();
-  renderLibri();
+//   libri.push(nuovoLibro);
+//   salvaLibri();
+//   renderLibri();
 
-  e.target.reset();
-  document.getElementById("campo-dimensione").setAttribute("hidden", "");
-});
+//   e.target.reset();
+//   document.getElementById("campo-dimensione").setAttribute("hidden", "");
+// });
 
 // === Event delegation lista libri ===
 document.getElementById("lista-libri").addEventListener("click", (e) => {
@@ -247,10 +247,95 @@ function mostraErrore() {
   errore.classList.remove("hidden");
 }
 
+function cerca(query) {
+  mostraSpinner();
+  const url = `https://openlibrary.org/search.json?q=${query}&limit=10`;
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Errore HTTP + response.status");
+      }
+      return response.json();
+    })
+    .then((dati) => {
+      renderRisultati(dati.docs);
+    })
+    .catch((err) => {
+      mostraErrore("Impossibile completare la ricerca: " + err.message);
+    })
+    .finally(() => {
+      nascondiSpinner();
+    });
+}
 
+function renderRisultati(docs) {
+  if (docs.length === 0) {
+    document.getElementById("risultati").innerHTML = `
+      <li>"Nessun risultato trovato."</li>`;
+    return;
+    // } else if (docs.filter((d) => d.author_name === "")) {
+    //   document.getElementById("risultati").innerHTML = `
+    //     <li>"Nessun risultato trovato."</li>`;
+  } else {
+    const lista = docs.map((d, i) => {
+      const titolo = d.title;
+      const autore =
+        d.author_name && d.author_name[0]
+          ? d.author_name[0]
+          : "Autore sconosciuto";
+      const anno = d.first_publish_year ? d.first_publish_year : "?";
+      return `<li class="info-search">
+        <div class="info">
+          <span class="titolo">${titolo}</span>
+          <div class="meta">
+            ${autore} - ${anno}
+          </div>
+          </div>
+          <button
+            data-titolo="${titolo}"
+            data-autore="${autore}"
+            data-anno="${anno}"
+          >
+            Aggiungi
+          </button>
+      </li>`;
+    });
+    document.getElementById("risultati").innerHTML = lista.join("");
+  }
+}
 
+// Debounce
+let timeoutId;
 
+document.getElementById("cerca").addEventListener("input", (e) => {
+  const query = e.target.value.trim(); // rimuove gli spazi vuoti iniziali e finali
 
+  if (query.length < 3) {
+    document.getElementById("risultati").innerHTML = "";
+    return;
+  } else {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      cerca(query);
+    }, 400);
+  }
+});
 
+// Listener click risultati
+document.getElementById("risultati").addEventListener("click", (e) => {
+  const button = e.target.closest("button[data-titolo]");
+  if (!button) return;
+
+  const titolo = button.dataset.titolo;
+  const autore = button.dataset.autore;
+  const anno = parseInt(button.dataset.anno);
+
+  const nuovoLibro = new Libro(titolo, autore, anno);
+  libri.push(nuovoLibro);
+  salvaLibri();
+  renderLibri();
+  button.textContent = "✓ Aggiunto";
+  button.setAttribute("disabled", "");
+});
 
 renderLibri();

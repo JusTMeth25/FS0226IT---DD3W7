@@ -172,3 +172,66 @@ body {
   background: hsl(140, 50%, 95%);
   border-color: hsl(140, 50%, 35%);
 }
+
+/* Cerca style */
+
+.campo {
+  margin-bottom: 20px;
+}
+
+.cerca-section {
+  margin: 20px 0;
+  padding: 20px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+}
+
+.info-search {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-search {
+  background: white;
+  padding: 16px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border-left: 4px solid hsl(220, 50%, 25%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-search .titolo {
+  font-weight: bold;
+}
+
+.info-search .meta {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.info-search .info {
+  flex: 1;
+}
+
+.info-search button {
+  background: hsl(140, 50%, 35%);
+  color: white;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.info-search button:disabled {
+  background: #ccc;
+}
+
+li {
+  list-style: none;
+}
