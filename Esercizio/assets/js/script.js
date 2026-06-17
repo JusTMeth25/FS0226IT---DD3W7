@@ -1,4 +1,5 @@
 const STORAGE_KEY = "libri";
+const QUERY_KEY = "ultimaQuery";
 
 // === salvaLibri ===
 function salvaLibri() {
@@ -317,6 +318,7 @@ document.getElementById("cerca").addEventListener("input", (e) => {
   } else {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
+      localStorage.setItem(QUERY_KEY, query);
       cerca(query);
     }, 400);
   }
@@ -360,5 +362,11 @@ document.getElementById("risultati").addEventListener("click", (e) => {
       });
   }
 });
+
+const ultimaQuery = localStorage.getItem(QUERY_KEY);
+if (ultimaQuery) {
+  document.getElementById("cerca").value = ultimaQuery;
+  cerca(ultimaQuery);
+}
 
 renderLibri();
