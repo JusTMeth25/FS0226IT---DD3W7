@@ -298,6 +298,7 @@ function renderRisultati(docs) {
           >
             Aggiungi
           </button>
+          <button data-key="${d.key}">Dettagli</button>
       </li>`;
     });
     document.getElementById("risultati").innerHTML = lista.join("");
@@ -323,19 +324,41 @@ document.getElementById("cerca").addEventListener("input", (e) => {
 
 // Listener click risultati
 document.getElementById("risultati").addEventListener("click", (e) => {
-  const button = e.target.closest("button[data-titolo]");
-  if (!button) return;
+  const buttonAggiungi = e.target.closest("button[data-titolo]");
+  if (buttonAggiungi) {
+    const titolo = buttonAggiungi.dataset.titolo;
+    const autore = buttonAggiungi.dataset.autore;
+    const anno = parseInt(buttonAggiungi.dataset.anno);
 
-  const titolo = button.dataset.titolo;
-  const autore = button.dataset.autore;
-  const anno = parseInt(button.dataset.anno);
+    const nuovoLibro = new Libro(titolo, autore, anno);
+    libri.push(nuovoLibro);
+    salvaLibri();
+    renderLibri();
+    buttonAggiungi.textContent = "✓ Aggiunto";
+    buttonAggiungi.setAttribute("disabled", "");
+    return;
+  }
 
-  const nuovoLibro = new Libro(titolo, autore, anno);
-  libri.push(nuovoLibro);
-  salvaLibri();
-  renderLibri();
-  button.textContent = "✓ Aggiunto";
-  button.setAttribute("disabled", "");
+  const buttonDettagli = e.target.closest("button[data-key]");
+  if (buttonDettagli) {
+    const key = buttonDettagli.dataset.key;
+    fetch(`https://openlibrary.org${key}.json`)
+      .then((response) => response.json())
+      .then((dati) => {
+        let descrizione;
+        if (typeof dati.description === "string") {
+          descrizione = dati.description;
+        } else if (dati.description && dati.description.value) {
+          descrizione = dati.description.value;
+        } else {
+          descrizione = "Nessuna descrizione disponibile";
+        }
+        alert(descrizione);
+      })
+      .catch((err) => {
+        alert("Errore nel caricamento dei dettagli: " + err.message);
+      });
+  }
 });
 
 renderLibri();
